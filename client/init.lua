@@ -2,6 +2,7 @@ local VehicleKeys = require 'client.interface'
 local Hotwire = require 'client.modules.hotwire'
 local Steal = require 'client.modules.steal'
 local LockPick = require 'client.modules.lockpick'
+local Utils    = require 'client.modules.utils'
 
 function VehicleKeys:Init()
     if self.currentVehicle == 0 or not VehicleKeys.isInDrivingSeat then
@@ -32,7 +33,8 @@ if Shared.Ready then
         if value then
             VehicleKeys.currentVehicle = value
             VehicleKeys.isInDrivingSeat = GetPedInVehicleSeat(value, -1) == cache.ped
-            VehicleKeys.currentVehiclePlate = GetVehicleNumberPlateText(value)
+            local plate = GetVehicleNumberPlateText(value)
+            VehicleKeys.currentVehiclePlate = Utils:RemoveSpacing(plate)
         else
             VehicleKeys.currentVehicle = 0
             VehicleKeys.isInDrivingSeat = false

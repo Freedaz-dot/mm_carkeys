@@ -1,5 +1,6 @@
 local VehicleKeys = require 'client.interface'
 local InventoryBridge = require 'bridge.inventory.client'
+local Utils           = require 'client.modules.utils'
 
 local KeyManagement = {
     getItemInfo = Shared.Inventory == 'qb' and function(item) return item.info end or function(item) return item.metadata end
@@ -11,10 +12,10 @@ function KeyManagement:SetVehicleKeys()
     for _, item in pairs(PlayerItems) do
         local itemInfo = self.getItemInfo(item)
         if itemInfo and item.name == "vehiclekey" then
-            VehicleKeys.playerKeys[itemInfo.plate] = true
+            VehicleKeys.playerKeys[Utils:RemoveSpacing(itemInfo.plate)] = true
         elseif itemInfo and item.name == "keybag" then
             for _,v in pairs(itemInfo.plates) do
-                VehicleKeys.playerKeys[v.plate] = true
+                VehicleKeys.playerKeys[Utils:RemoveSpacing(v.plate)] = true
             end
         end
     end
@@ -138,7 +139,7 @@ RegisterNetEvent('mm_carkeys:client:removetempkeys', function(plate)
 end)
 
 RegisterNetEvent('mm_carkeys:client:setplayerkey', function(plate, netId)
-    local vehicle = NetworkGetEntityFromNetworkId(netId)
+    local vehicle = netId
     if not plate or not netId then
         return lib.notify({
             description = 'No Vehicle Data Found',

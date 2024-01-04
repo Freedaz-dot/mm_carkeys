@@ -1,6 +1,7 @@
 if Shared.Framework == 'esx' then
     local KeyManagement = require 'client.modules.keys'
     local VehicleKeys = require 'client.interface'
+    local Utils = require 'client.modules.utils'
 
     local ESX = exports['es_extended']:getSharedObject()
 
@@ -8,7 +9,8 @@ if Shared.Framework == 'esx' then
         VehicleKeys.currentVehicle = cache.vehicle and cache.vehicle or 0
         if cache.vehicle then
             VehicleKeys.isInDrivingSeat = GetPedInVehicleSeat(cache.vehicle, -1) == cache.ped
-            VehicleKeys.currentVehiclePlate = GetVehicleNumberPlateText(cache.vehicle)
+            local plate = GetVehicleNumberPlateText(cache.vehicle)
+            VehicleKeys.currentVehiclePlate = Utils:RemoveSpacing(plate)
         end
     end
 
